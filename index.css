@@ -104,3 +104,14 @@
   transform: scale(1.05);
   margin: 10px;
 }
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 200px;
+  height: 400px;
+  margin: 20px;
+  background: #f0f0f0;
+}

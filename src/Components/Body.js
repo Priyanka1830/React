@@ -1,10 +1,37 @@
 import RestaurantCard from "./RestaurantCard";
-import resList from "../utils/mockData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Shimmer from "./Shimmer";
 
 
 const Body = () => {
-    const [ listOfRestaurents, setListOfRestaurents] = useState(resList)
+    const [ listOfRestaurents, setListOfRestaurents] = useState([]);
+
+    useEffect(() =>{
+      fetchData();
+    },[]);
+
+   const fetchData = async () => {
+      try {
+         const response = await fetch(
+            "http://localhost:5000/api/restaurants?lat=12.903942110837612&lng=77.57556796073914&collection=83633"
+         );
+         const data = await response.json();
+         const restaurants = data.data.cards
+            .slice(3) // skip non-restaurant widgets
+            .map(card => card.card.card)  // unwrap nested objects
+            .filter(restaurant => restaurant && restaurant.info); // ensure info exists
+
+         setListOfRestaurents(restaurants); 
+         console.log("Frontend got data:", data);
+      } catch (err) {
+         console.error("Frontend error:", err);
+      }
+   };
+
+   if(listOfRestaurents.length === 0){
+      return <Shimmer />
+   }
+   
    return (
       <div className="body">
          <div className="search">Search</div>
